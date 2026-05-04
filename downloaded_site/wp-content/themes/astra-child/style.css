@@ -1,0 +1,128 @@
+/*
+Theme Name: Astra Child
+Template: astra
+Version: 1.0.0
+*/
+/* Main CSS Start*/
+h1{font-family: "segoe-ui", Sans-serif !important;}
+h2,h3,h4,h5,input,.elementor-icon-list-text{font-family: "segoe-ui", Sans-serif !important;}
+/* Main CSS End */
+#scrollToTopBtn{padding-right:25px}
+
+@media (max-width: 1000px) {
+	.e-search-form{    direction: ltr;}
+}
+body{font-family: "segoe-ui", Sans-serif;}
+.elementor-button-text{font-family: "segoe-ui", Sans-serif;}
+@media (max-width: 768px) {
+    html, body {
+        overflow-x: hidden;
+    }
+}
+/* ############ */
+.tw-lang-switch{
+    display:inline-block;
+    padding:6px 10px;
+    border:1px solid #ddd;
+    border-radius:6px;
+    font-weight:700;
+    text-decoration:none;
+    line-height:1;
+}
+/* #######lang */
+.lotex-subcategory-column{
+
+        text-align: right;
+  }
+body.tw-lang-en .category-filters{
+        direction: ltr;
+        text-align: left;
+  }
+body.tw-lang-en .lotex-subcategory-column{
+        direction: ltr;
+        text-align: left;
+  }
+body.tw-lang-en .lotex-sub-subcategory-column{
+        direction: ltr;
+        text-align: left;
+  }
+
+  body.tw-lang-en .sortfil{
+float: right;
+direction: ltr;
+  }
+  body.tw-lang-en #search-posts-results p{
+float: right;
+  }
+  body.tw-lang-en .post-category{
+text-align: left !important;
+  }
+
+    body.tw-lang-en .elementor-4270 .elementor-element.elementor-element-cd0a815{
+border-width: 0px 0px 0px 6px !important;
+  }
+  body.tw-lang-en .post-info p{
+    padding-left: 70px;
+}
+  body.tw-lang-en .subcategory-filters{
+    direction: ltr !important;
+  }
+  body.tw-lang-en #main-size-block{
+    direction: rtl !important;
+  }
+
+body.tw-lang-en .radiomycss label{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    direction:ltr;
+}
+/* #######زر تغيير اللغه */
+.tw-lang-switch{display:inline-flex;align-items:center;gap:8px}
+.tw-flag{width:32px;height:32px;border-radius:50%;display:inline-block;background-size:cover;background-position:center}
+.tw-flag-sa{background-image:url('saudi-arabia.png')}
+.tw-flag-us{background-image:url('united-states.png')}
+.tw-lang-switch{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    text-decoration:none;
+}
+
+.tw-lang-switch .tw-flag{
+
+    line-height:1;
+}
+img.wp-smiley, img.emoji {
+
+
+    width: 2em !important;
+ 
+}
+/* ########### */
+body.tw-lang-en .total-rating-display{
+  float: left;
+}
+body.tw-lang-en .comments-area .form-submit{text-align: left;}
+body.tw-lang-en #reply-title{text-align: left;}
+body.tw-lang-en .logged-in-as{text-align: left;}
+body.tw-lang-en .comment-form-comment label{text-align: left;float: left;}
+body.tw-lang-en .download-info svg{ gap: 5px;margin-right: 5px;}
+
+body.tw-lang-en #comments{text-align: left;}
+body.tw-lang-en .ast-comment-cite-wrap{text-align: left;}
+body.tw-lang-en .ast-comment-content{text-align: left;}
+body.tw-lang-en .comment-form-author{  float: left;  }
+body.tw-lang-en .comment-form-cookies-consent{text-align: left;}
+.appinfo-tags a{
+    border: 1px solid #5fa08759;
+    border-radius: 10px;
+    padding: 1px 5px;
+    font-size: 12px;
+    float: left;
+        margin: 1px;
+}
+.appinfo-tags {
+width: 100% !important;
+}
+body.tw-lang-en .ast-grid-common-col label{text-align: left;float: left;}
