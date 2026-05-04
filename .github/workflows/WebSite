@@ -1,0 +1,121 @@
+name: WebSite
+
+on:
+  workflow_dispatch:
+    inputs:
+      site_url:
+        description: '🔗 لینک سایت برای دانلود (مثلاً https://example.com)'
+        required: true
+        type: string
+      folder_name:
+        description: '📂 نام پوشه برای ذخیره (پیش‌فرض: downloaded_site)'
+        required: false
+        default: 'downloaded_site'
+        type: string
+
+jobs:
+  download-website:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4
+
+      - name: Run Website Downloader (AVASAM)
+        run: |
+          cat <<'PYCODE' > downloader.py
+          import requests
+          from bs4 import BeautifulSoup
+          import os
+          from urllib.parse import urljoin, urlparse
+
+          ALLOWED_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.gif', '.svg', '.css', '.js', '.html'}
+          BLOCKED_EXTENSIONS = {'.mp4', '.webm', '.avi', '.mov', '.zip', '.exe', '.pdf'}
+
+          def is_allowed(url):
+              parsed_url = urlparse(url)
+              path = parsed_url.path.lower()
+              for ext in BLOCKED_EXTENSIONS:
+                  if path.endswith(ext): return False
+              for ext in ALLOWED_EXTENSIONS:
+                  if path.endswith(ext): return True
+              if not os.path.splitext(path)[1]:
+                  return True
+              return False
+
+          def download_site(url, folder_name):
+              if not os.path.exists(folder_name):
+                  os.makedirs(folder_name)
+
+              print(f"🌍 Downloading site: {url}")
+              
+              # دانلود صفحه اصلی
+              response = requests.get(url)
+              response.raise_for_status()
+              soup = BeautifulSoup(response.text, 'html.parser')
+              base_url = url
+
+              for tag in soup.find_all(['img', 'link', 'script']):
+                  attr = 'src' if tag.has_attr('src') else ('href' if tag.has_attr('href') else None)
+                  if not attr: continue
+                  src = tag[attr]
+                  full_url = urljoin(base_url, src)
+                  parsed = urlparse(full_url)
+                  if is_allowed(full_url):
+                      try:
+                          file_res = requests.get(full_url)
+                          file_res.raise_for_status()
+                          rel_path = parsed.path.lstrip('/')
+                          save_path = os.path.join(folder_name, rel_path)
+                          os.makedirs(os.path.dirname(save_path), exist_ok=True)
+                          with open(save_path, 'wb') as f:
+                              f.write(file_res.content)
+                          tag[attr] = rel_path
+                      except Exception as e:
+                          print(f"⚠️ error {full_url}: {e}")
+
+              index_path = os.path.join(folder_name, 'index.html')
+              with open(index_path, 'w', encoding='utf-8') as f:
+                  f.write(soup.prettify())
+
+              print(f"✅ Saved to {index_path}")
+              
+              # -------------------------------------------------------
+              # ❌ منطق ساخت و فشرده‌سازی فایل ZIP به طور کامل حذف شد ❌
+              # -------------------------------------------------------
+
+          if __name__ == "__main__":
+              site_url = "${{ github.event.inputs.site_url }}"
+              folder_name = "${{ github.event.inputs.folder_name }}"
+              download_site(site_url, folder_name)
+          PYCODE
+
+          python downloader.py
+
+      - name: Commit & Push results (AVASAM)
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add "${{ github.event.inputs.folder_name }}" || true
+          # ❌ git add "*.zip" || true   <-- این خط حذف شد
+          if git diff --cached --quiet; then
+            echo "No new files to commit."
+            exit 0
+          fi
+          git commit -m "[AVASAM] Download site ${{ github.event.inputs.site_url }} [skip ci]"
+          git pull --rebase origin "${GITHUB_REF_NAME}" || true
+          git push origin HEAD:"${GITHUB_REF_NAME}"
